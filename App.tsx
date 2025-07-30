@@ -86,21 +86,21 @@ const App: React.FC = () => {
 
   const handleAuthSuccess = (user: User) => {
     setCurrentUser(user);
-    if (user.role === 'admin') {
-        if (auctionState.gamePhase === GamePhase.SETUP) {
-            updateAuctionState({ gamePhase: GamePhase.SETUP });
-        }
-    } else {
-        if (auctionState.gamePhase !== GamePhase.AUCTION) {
-            updateAuctionState({ gamePhase: GamePhase.WAITING_FOR_AUCTION });
-        }
-    }
     localStorage.setItem(USER_SESSION_KEY, JSON.stringify(user));
+    // The renderContent function will now correctly handle showing the right view
+    // based on the existing, unchanged gamePhase and the new user's role.
   };
 
   const handleLogout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem(USER_SESSION_KEY);
+    if (currentUser?.role !== 'admin') {
+      setCurrentUser(null);
+      localStorage.removeItem(USER_SESSION_KEY);
+    } else {
+        // Admins logging out probably want to end the session for everyone
+        handleResetAuction();
+        setCurrentUser(null);
+        localStorage.removeItem(USER_SESSION_KEY);
+    }
   };
   
   const handleSetupComplete = (
@@ -141,8 +141,8 @@ const App: React.FC = () => {
             config: null,
             isAuctionFinished: false,
         };
-        setAuctionState(freshState);
-        localStorage.setItem(AUCTION_STATE_KEY, JSON.stringify(freshState));
+        // This will update the state for the admin and broadcast to other users
+        updateAuctionState(freshState);
     }
   };
 
@@ -159,10 +159,12 @@ const App: React.FC = () => {
         return <WaitingRoom />;
 
       case GamePhase.WAITING_FOR_AUCTION:
+        // This phase is now implicitly handled by the SETUP case for users,
+        // but we keep it for logical clarity in the enum.
         return <WaitingRoom />;
 
       case GamePhase.AUCTION:
-        if (auctionState.config) {
+        if (auctionState.config && !auctionState.isAuctionFinished) {
           return (
             <Auction
               state={auctionState}
@@ -171,7 +173,8 @@ const App: React.FC = () => {
             />
           );
         }
-        return <WaitingRoom />; // Fallback if config is missing
+        // If auction is finished OR config is missing, show results/end screen
+        return <Auction onStateChange={updateAuctionState} state={auctionState} currentUser={currentUser} />;
 
       default:
         return <WaitingRoom />;
@@ -194,7 +197,7 @@ const App: React.FC = () => {
                     <UserCircleIcon className="h-6 w-6"/>
                     <span>{currentUser.username} ({currentUser.role})</span>
                 </div>
-                {currentUser.role === 'admin' && (
+                {currentUser.role === 'admin' && auctionState.gamePhase !== GamePhase.SETUP && (
                 <button
                     onClick={handleResetAuction}
                     className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 shadow-lg"
