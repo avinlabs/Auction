@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-ag" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cricket Premier Auction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cricket: {
+                700: '#2A644A',
+                800: '#1E4935',
+                900: '#153425',
+                950: '#0E2319'
+              },
+              gold: {
+                300: '#FCD34D',
+                400: '#FBBF24',
+                500: '#F59E0B'
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* For custom scrollbars */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #153425; /* bg-cricket-900 */
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2A644A; /* bg-cricket-700 */
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #1E4935; /* bg-cricket-800 */
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react": "https://esm.sh/react@^19.1.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-cricket-950 text-gray-200 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

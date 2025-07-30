@@ -1,0 +1,5 @@
+{
+  "name": "Cricket Premier Auction",
+  "description": "A dynamic and engaging web application to host a live cricket player auction. Features include team and player setup, a randomizing spin wheel for player selection, and a turn-based bidding system.",
+  "requestFramePermissions": []
+}
