@@ -148,31 +148,35 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     if (!currentUser) {
-        return <Auth onAuthSuccess={handleAuthSuccess} />;
-    }
-    
-    if (currentUser.role === 'admin') {
-        if (auctionState.gamePhase === GamePhase.SETUP) {
-             return <Setup onSetupComplete={handleSetupComplete} />;
-        }
-    }
-    
-    if (currentUser.role === 'user' && (auctionState.gamePhase === GamePhase.SETUP || auctionState.gamePhase === GamePhase.WAITING_FOR_AUCTION)) {
-        return <WaitingRoom />;
+      return <Auth onAuthSuccess={handleAuthSuccess} />;
     }
 
-    if (auctionState.gamePhase === GamePhase.AUCTION && auctionState.config) {
-        return (
+    switch (auctionState.gamePhase) {
+      case GamePhase.SETUP:
+        if (currentUser.role === 'admin') {
+          return <Setup onSetupComplete={handleSetupComplete} />;
+        }
+        return <WaitingRoom />;
+
+      case GamePhase.WAITING_FOR_AUCTION:
+        return <WaitingRoom />;
+
+      case GamePhase.AUCTION:
+        if (auctionState.config) {
+          return (
             <Auction
-                state={auctionState}
-                currentUser={currentUser}
-                onStateChange={updateAuctionState}
+              state={auctionState}
+              currentUser={currentUser}
+              onStateChange={updateAuctionState}
             />
-        );
+          );
+        }
+        return <WaitingRoom />; // Fallback if config is missing
+
+      default:
+        return <WaitingRoom />;
     }
-    
-    return <WaitingRoom />;
-  }
+  };
 
   return (
     <div className="min-h-screen bg-cricket-950 text-gray-200 flex flex-col items-center p-4 sm:p-6 lg:p-8 font-sans">
