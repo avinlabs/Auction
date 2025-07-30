@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { GamePhase, Team, Pool, AuctionConfig, User, AuctionState } from './types';
-import Setup from './components/Setup';
-import Auction from './components/Auction';
-import Auth from './components/Auth';
-import WaitingRoom from './components/WaitingRoom';
-import { LogoIcon, LogoutIcon, UserCircleIcon, ClockIcon } from './components/icons';
+import { GamePhase, Team, Pool, AuctionConfig, User, AuctionState } from './types.ts';
+import Setup from './components/Setup.tsx';
+import Auction from './components/Auction.tsx';
+import Auth from './components/Auth.tsx';
+import WaitingRoom from './components/WaitingRoom.tsx';
+import { LogoIcon, LogoutIcon, UserCircleIcon, ClockIcon } from './components/icons.tsx';
 
 const AUCTION_STATE_KEY = 'cricket-auction-state';
 const USER_SESSION_KEY = 'cricket-auction-user';
